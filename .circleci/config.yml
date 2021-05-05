@@ -87,7 +87,7 @@ job_defaults: &job_defaults
     - restore_cache:
         name: Restore pip cache
         keys:
-          - v2-<< parameters.python_image >>-{{ checksum "requirements.txt" }}
+          - v3-<< parameters.python_image >>-{{ checksum "requirements.txt" }}
         paths:
           - ~/cache/pip
 
