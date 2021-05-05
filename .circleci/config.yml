@@ -94,15 +94,18 @@ job_defaults: &job_defaults
     - run:
         name: Install dependencies
         command: python -m pip install --cache-dir ~/cache/pip --progress-bar off -r requirements.txt
-
     - save_cache:
         name: Save pip cache
-        key: v2-<< parameters.python_image >>-{{ checksum "requirements.txt" }}
+        key: v3-<< parameters.python_image >>-{{ checksum "requirements.txt" }}
         paths:
           - ~/cache/pip
     - run:
         name: Run Flake8
         command: python -m flake8
+
+    - run:
+        name: Check dependencies
+        command: ls -la /usr/local/lib/python3.8/site-packages/faker/
 
     - run:
         name: Run tests
