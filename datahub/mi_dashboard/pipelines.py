@@ -1,7 +1,7 @@
 from typing import Tuple, Type
 
-from django.db.models import F, Model, Value
-from django.db.models.functions import Coalesce
+from django.db.models import CharField, F, IntegerField, Model, Value
+from django.db.models.functions import Cast, Coalesce
 from django.db.models.query import QuerySet
 
 from datahub.core.query_utils import (
@@ -145,11 +145,11 @@ class ETLInvestmentProjects(ETLBase):
             # this contains helper annotations
             _possible_uk_region_names=get_string_agg_subquery(
                 InvestmentProject,
-                'uk_region_locations__name',
+                Cast('uk_region_locations__name', CharField()),
             ),
             _actual_uk_region_names=get_string_agg_subquery(
                 InvestmentProject,
-                'actual_uk_regions__name',
+                Cast('actual_uk_regions__name', CharField()),
             ),
         ).annotate(
             project_reference=get_project_code_expression(),
@@ -169,7 +169,10 @@ class ETLInvestmentProjects(ETLBase):
                 '_actual_uk_region_names',
                 Value(NO_UK_REGION_ASSIGNED),
             ),
-            project_fdi_value=Coalesce('fdi_value__name', Value(NO_FDI_VALUE_ASSIGNED)),
+            project_fdi_value=Coalesce(
+                Cast('fdi_value__name', CharField()),
+                Value(NO_FDI_VALUE_ASSIGNED),
+            ),
             sector_cluster=get_sector_cluster_expression('sector'),
             uk_region_name=get_other_field_if_null_or_empty_expression(
                 '_actual_uk_region_names',
@@ -182,20 +185,26 @@ class ETLInvestmentProjects(ETLBase):
             ),
             financial_year=get_financial_year_from_land_date_expression(),
             dh_fdi_project_id=F('id'),
-            investment_type_name=get_empty_string_if_null_expression('investment_type__name'),
+            investment_type_name=get_empty_string_if_null_expression(
+                Cast('investment_type__name', CharField()),
+            ),
             level_of_involvement_name=get_empty_string_if_null_expression(
-                'level_of_involvement__name',
+                Cast('level_of_involvement__name', CharField()),
             ),
             simplified_level_of_involvement=get_level_of_involvement_simplified_expression(),
             overseas_region=get_empty_string_if_null_expression(
-                'investor_company__address_country__overseas_region__name',
+                Cast('investor_company__address_country__overseas_region__name', CharField()),
             ),
             country_url=get_country_url(),
-            investor_company_country=get_empty_string_if_null_expression(
-                'country_investment_originates_from__name',
+            investor_company_country=Cast(
+                get_empty_string_if_null_expression('country_investment_originates_from__name'),
+                CharField(),
             ),
             stage_name=F('stage__name'),
-            total_investment_with_zero=Coalesce('total_investment', Value(0)),
+            total_investment_with_zero=Coalesce(
+                Cast('total_investment', IntegerField()),
+                Value(0),
+            ),
             number_safeguarded_jobs_with_zero=Coalesce('number_safeguarded_jobs', Value(0)),
             number_new_jobs_with_zero=Coalesce('number_new_jobs', Value(0)),
         )

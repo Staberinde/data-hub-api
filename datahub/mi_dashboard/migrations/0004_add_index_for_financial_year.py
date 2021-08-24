@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('datahub.mi_dashboard', '0003_set_explicit_table_name'),
+        ('datahub_mi_dashboard', '0003_set_explicit_table_name'),
     ]
 
     operations = [

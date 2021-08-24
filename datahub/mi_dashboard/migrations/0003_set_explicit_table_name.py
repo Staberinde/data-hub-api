@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('datahub.mi_dashboard', '0002_add_extra_number_fields'),
+        ('datahub_mi_dashboard', '0002_add_extra_number_fields'),
     ]
 
     operations = [

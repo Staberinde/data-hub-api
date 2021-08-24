@@ -133,6 +133,11 @@ MI_APPS = [
     'datahub.mi_dashboard',
 ]
 
+MI_APPS_LABELS = [
+    'datahub_mi_dashboard',
+]
+
+
 # Can be used as a way to load a third-party app that has been removed from the
 # default INSTALLED_APPS list so its migrations can be reversed without them
 # being automatically reapplied.

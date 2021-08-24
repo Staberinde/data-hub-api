@@ -27,7 +27,7 @@ class DBRouter:
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
         """Check if given migration can be run against given database."""
-        if db == self.MI_DATABASE_LABEL and app_label in settings.MI_APPS:
+        if db == self.MI_DATABASE_LABEL and app_label in settings.MI_APPS_LABELS:
             return True
 
-        return db == 'default' and app_label not in settings.MI_APPS
+        return db == 'default' and app_label not in settings.MI_APPS_LABELS

@@ -130,7 +130,7 @@ def get_country_url():
     return Case(
         When(
             country_investment_originates_from=None,
-            then=Value(''),
+            then=Value('', output_field=CharField()),
         ),
         default=country_url,
     )
